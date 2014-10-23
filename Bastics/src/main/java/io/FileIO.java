@@ -13,6 +13,26 @@ public class FileIO {
 
     private static final String USER_DIR = "user.dir";
     private static final String CONFIG_FILE = "config.tsv";
+    private static final String UTF_8 = "UTF-8";
+
+    public static String readFile(String path) throws Exception {
+        return readFile(new FileInputStream(path));
+    }
+
+    public static String readFile(InputStream is) throws Exception {
+
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            throw e;
+        }
+        return sb.toString();
+    }
 
     public static Setting readSettingFile() throws Exception {
 
@@ -22,7 +42,7 @@ public class FileIO {
         if (file == null) throw new FileIOException(CONFIG_FILE + " not found!");
         try {
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
             List<String> configList = new ArrayList<>();
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -55,7 +75,7 @@ public class FileIO {
     public static void saveFile(String outputPath, String file) throws Exception {
 
         try {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath), UTF_8));
             writer.write(file);
             writer.flush();
             writer.close();

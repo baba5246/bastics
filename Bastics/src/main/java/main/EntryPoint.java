@@ -1,6 +1,9 @@
 package main;
 
+import bastics.Bastics;
+import bastics.Statistics;
 import io.FileIO;
+import io.MdFormatter;
 import util.Setting;
 
 /**
@@ -10,23 +13,29 @@ public class EntryPoint {
 
     public static void main(String[] args) throws Exception {
 
-        // TODO: read a setting file
+        // read a setting file
         Setting setting = FileIO.readSettingFile();
 
-        // TODO: branch with type
+        // branch with type
+        String type = setting.getString("type");
+        Statistics result = null;
+        switch (type) {
+            case "file":
+                result = Bastics.computeBasicStatistics(setting.getString("path"));
+                break;
+            case "jdbc":
+                break;
+        }
+        if (result==null) {
+            System.err.println("error in bastics");
+            return;
+        }
 
-            // TODO: if file
+        // format results with md
+        String content = MdFormatter.format(result);
 
-            // TODO: if jdbc
-
-        // TODO: get results
-
-        // TODO: compute basic statistics
-
-        // TODO: format results with md
-
-        // TODO: save results to file
-        FileIO.saveFile(setting.getString("output"), "test");
+        // save results to file
+        FileIO.saveFile(setting.getString("output"), content);
 
     }
 }
